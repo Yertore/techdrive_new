@@ -1,0 +1,56 @@
+body {
+    background-color: #fff;
+    color: #111;
+    padding: 0 20px;
+    font-family: 'Roboto Slab', serif;
+}
+
+.btn {
+    display: inline-block;
+    background: skyblue;
+    padding: 6px 40px;
+    border: none;
+    outline: none;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    margin: 10px 5px;
+}
+
+.btn_export {
+    display: inline-block;
+    padding: 10px 40px;
+    border: none;
+    outline: none;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    margin: 10px 5px;
+    align-content: right;
+    background: rgb(243, 194, 87);
+}
+.btn_export:hover {
+    background-color: rgb(255, 231, 111);
+}
+.btn green {
+    background: rgb(54, 243, 117);
+}
+
+.btn:hover {
+    background-color: #bcd1e6;
+}
+
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 90%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+.select {
+    width: 300px;
+}

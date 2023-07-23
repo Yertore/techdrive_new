@@ -20,6 +20,11 @@ body {
 .btn:hover {
     background-color: #bcd1e6;
 }
+.btn:disabled {
+    cursor: none;
+    background-color: #fff;
+    border: #111 solid 1px
+}
 
 .btn_export {
     display: inline-block;
@@ -38,22 +43,24 @@ body {
 
 table {
     margin-top: 10px;
-  font-family: arial, sans-serif;
-  border-collapse: collapse;
-  width: 100px;
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
 }
 
 th {
-  border: 1px solid #dddddd;
-  text-align: left;
-  padding: 8px;
-  background-color:rgb(235, 230, 220);
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+    background-color:rgb(235, 230, 220);
 }
 
 td {
     border: 1px solid #dddddd;
     text-align: left;
     padding: 8px;
+    max-width: 550px;
+    min-width: 50px;
+    word-wrap:break-word;
   }
 .select {
     width: 300px;

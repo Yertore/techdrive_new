@@ -6,6 +6,7 @@ import {logs as requestData } from  '../db/logs';
 import {kzcities} from '../db/kzcities';
 import Select from 'react-select';
 import Table from './Table';
+import { MyContext } from "../context";
 
 function Weather() {
     //call service
@@ -18,14 +19,14 @@ function Weather() {
     const kzCitiesList = [];
     kzcities.map(item => kzCitiesList.push(Object.assign({}, {value: item.city, label: item.city})));
 
+    let latitude = kzcities.find(el => el.city === selectedCity?.value)?.lat;
+    let longitude = kzcities.find(el => el.city === selectedCity?.value)?.lng;
+
     //Call sevice to 1 day
     const onRequestOneDay = () => {
         if(!selectedCity) {
             alert("please select city")
-        } else {
-            let latitude = kzcities.find(el => el.city === selectedCity?.value)?.lat;
-            let longitude = kzcities.find(el => el.city === selectedCity?.value)?.lng;
-            
+        } else {            
             getWeatherForOneDay(latitude, longitude)
                 .then(onWeatherOneDayLoaded)
         }
@@ -37,11 +38,10 @@ function Weather() {
         let maxTemp = Math.max(...tempTempArr);
         let minTemp = Math.min(...tempTempArr);
 
-        console.log(log.length);
         setLog([...log, {
             id: !log.length ? 1 : log[log.length-1].id + 1,
             request: req,
-            response: `${JSON.stringify(weather).slice(0, 230)}...`,
+            response: JSON.stringify(weather),
             date: weather.hourly.time[0].substr(0, 10),
             temperature: `Min: ${minTemp}, Max: ${maxTemp}`,
             city: selectedCity?.value
@@ -53,9 +53,6 @@ function Weather() {
         if(!selectedCity) {
             alert("please select city")
         } else {
-            let latitude = kzcities.find(el => el.city === selectedCity?.value)?.lat;
-            let longitude = kzcities.find(el => el.city === selectedCity?.value)?.lng;
-            
             getWeatherForSevenDays(latitude, longitude)
                 .then(onWeatherSevenDaysLoaded)
         }
@@ -87,7 +84,7 @@ function Weather() {
             arr.push({
                 id: ++counter,
                 request: req,
-                response: `${JSON.stringify(weather).slice(0, 230)}...`,
+                response: JSON.stringify(weather),
                 date: unique[i],
                 temperature: `Min: ${temp[i][0]}, Max: ${temp[i][1]}`,
                 city: selectedCity?.value
@@ -96,8 +93,6 @@ function Weather() {
         //ob`edin9iu massivy
         setLog([...log, ...arr]);
     }
-
-    console.log(log);
 
     return (
         <>
@@ -112,8 +107,9 @@ function Weather() {
 
             <button className='btn' onClick={onRequestSevenDays}>Week</button>
             <button className='btn' onClick={onRequestOneDay}>Day</button>
-            
-            <Table data={log} />
+            <MyContext.Provider value={{ log, setLog, selectedCity }}>
+                <Table latitude={latitude} longitude={longitude} />
+            </MyContext.Provider>
         </>
     );
 }

@@ -48,7 +48,8 @@ const Table = ({ latitude, longitude }) => {
     return (
         <>
             <div>
-                <label style={{margin: "10px"}} htmlFor="name">Filter by Date:</label> <DatePicker className='datepicker' isClearable showIcon dateFormat="yyyy-MM-dd" selected={date} onChange={(date) => setDate(date)} />
+                <label style={{margin: "10px"}} htmlFor="name">Filter by Date:</label> 
+                <DatePicker className='datepicker' isClearable showIcon dateFormat="yyyy-MM-dd" selected={date} onChange={(date) => setDate(date)} />
                 <button 
                     name="sendReq" 
                     disabled = {!filteredData.length && date && selectedCity ? false : true}
@@ -79,7 +80,7 @@ const Table = ({ latitude, longitude }) => {
                         </tr>
                     ))}
                 </tbody>
-            </table> : <p>There are no datas</p>}
+            </table> : <p>There are no data</p>}
         </>    
     )
 }

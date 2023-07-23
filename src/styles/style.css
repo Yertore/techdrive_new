@@ -6,15 +6,16 @@ body {
 }
 
 .btn {
-    display: inline-block;
     background: skyblue;
-    padding: 6px 40px;
+    padding: 10px 50px;
     border: none;
     outline: none;
     border-radius: 5px;
     transition: all 0.3s ease;
     cursor: pointer;
-    margin: 10px 5px;
+    margin: 10px 10px;
+    font-size: 16px;
+    border: skyblue solid 1px;
 }
 
 .btn:hover {
@@ -22,13 +23,14 @@ body {
 }
 .btn:disabled {
     cursor: none;
-    background-color: #fff;
-    border: #111 solid 1px
+    background-color: rgb(247, 241, 241);
+    border: rgb(228, 220, 220) solid 1px;
 }
 
 .btn_export {
     display: inline-block;
-    padding: 10px 40px;
+    padding: 10px 50px;
+    font-size: 16px;
     border: none;
     outline: none;
     border-radius: 5px;
@@ -62,8 +64,22 @@ td {
     min-width: 50px;
     word-wrap:break-word;
   }
-.select {
+.selectcity {
+    display: inline-block;
+    margin: 5px;
     width: 300px;
+}
+.selectday {
+    display: inline-block;
+    margin: 5px;
+    width: 130px;
+}
+
+.datepicker {
+    padding: 10px 40px;
+    height: 27px;
+    border-radius: 5px;
+    border: rgb(163, 157, 157) solid 1px
 }
 
 .search {

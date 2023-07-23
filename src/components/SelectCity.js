@@ -9,6 +9,7 @@ const SelectCity = () => {
     
     const kzCitiesList = [];
     kzcities.map(item => kzCitiesList.push(Object.assign({}, {value: item.city, label: item.city})));
+    console.log(kzCitiesList)
 
     return (
         <>

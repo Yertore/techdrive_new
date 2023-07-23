@@ -1,4 +1,4 @@
-export const cities =[
+export const kzcities =[
     {
       city: "Almaty",
       lat: 43.2775,

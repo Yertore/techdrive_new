@@ -17,6 +17,10 @@ body {
     margin: 10px 5px;
 }
 
+.btn:hover {
+    background-color: #bcd1e6;
+}
+
 .btn_export {
     display: inline-block;
     padding: 10px 40px;
@@ -26,31 +30,36 @@ body {
     transition: all 0.3s ease;
     cursor: pointer;
     margin: 10px 5px;
-    align-content: right;
     background: rgb(243, 194, 87);
 }
 .btn_export:hover {
     background-color: rgb(255, 231, 111);
 }
-.btn green {
-    background: rgb(54, 243, 117);
-}
-
-.btn:hover {
-    background-color: #bcd1e6;
-}
 
 table {
+    margin-top: 10px;
   font-family: arial, sans-serif;
   border-collapse: collapse;
-  width: 90%;
+  width: 100px;
 }
 
-td, th {
+th {
   border: 1px solid #dddddd;
   text-align: left;
   padding: 8px;
+  background-color:rgb(235, 230, 220);
 }
+
+td {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+  }
 .select {
     width: 300px;
+}
+
+.search {
+    margin: 10px;
+    padding: 5px;
 }

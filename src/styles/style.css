@@ -71,18 +71,18 @@ td {
 }
 .selectday {
     display: inline-block;
-    margin: 5px;
+    margin: 5px 10px 5px 0;
     width: 130px;
 }
 
 .datepicker {
     padding: 10px 40px;
     height: 27px;
+    font-size: 16px;
     border-radius: 5px;
     border: rgb(163, 157, 157) solid 1px
 }
 
-.search {
-    margin: 10px;
-    padding: 5px;
+.filterform {
+    display: inline;
 }

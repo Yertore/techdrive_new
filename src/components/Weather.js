@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState, useEffect, } from 'react';
 import '../styles/style.css';
 import Service from '../services/Service';
 import {logs as requestData } from  '../db/logs';
@@ -7,11 +7,15 @@ import {kzcities} from '../db/kzcities';
 import Select from 'react-select';
 import Table from './Table';
 import { MyContext } from "../context";
+import TextField from '@mui/material/TextField';
 
 function Weather() {
     //call service
     const { getWeather } = Service();
     const [log, setLog] = useState(requestData);
+    const [cityInput, setCityInput] = useState("");
+    const [coordinates, setCordinates] = useState({});
+
 
     //Array kz cities
     const kzCitiesList = [];
@@ -23,23 +27,51 @@ function Weather() {
         {value: 14, label: "14 days"},
         {value: 16, label: "16 days"},
     ];
-    const [selectedCity, setSelectedCity] = useState(kzCitiesList[0]);
-    const [selectedDay, setSelectedDay] = useState(daysList[2]);
+    const [selectedCity, setSelectedCity] = useState(null);
+    const [selectedDay, setSelectedDay] = useState(daysList[0]);
 
-    let latitude = kzcities.find(el => el.city === selectedCity?.value)?.lat;
-    let longitude = kzcities.find(el => el.city === selectedCity?.value)?.lng;
+    let latitude = !cityInput ? kzcities.find(el => el.city === selectedCity?.value)?.lat : (coordinates?.latitude ? coordinates?.latitude : null);
+    let longitude = !cityInput ? kzcities.find(el => el.city === selectedCity?.value)?.lng : (coordinates?.longitude ? coordinates?.longitude : null);
+
+    const getCityCoordinates = async () => {
+        let apiKey = "1pfFmMtiUKWYo+drdaoZkg==ijG7JvPlZcQdHshD";
+        let url = 'https://api.api-ninjas.com/v1/geocoding?city=' + cityInput;
+        //request
+        if(cityInput) {
+            try {
+                const response = await fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'X-Api-Key': apiKey,
+                        "Content-Type": "application/json",
+                    }
+                })
+                const ans = await response.json();
+                setCordinates(ans[0]);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+    }
+    useEffect(() => {
+        getCityCoordinates();
+        // eslint-disable-next-line
+    }, [cityInput]);
 
     //Call sevice to 7 days
     const onRequest = () => {
-        if(!selectedCity) {
+        if (!selectedCity && !cityInput) {
             alert("please select city")
         } else {
+            if (latitude && longitude){
             getWeather(latitude, longitude, selectedDay)
                 .then(onWeatherLoaded)
+            } else {alert("Incorrect city")}
         }
     }
 
     const onWeatherLoaded = async({weather, req}) => {
+        let city = coordinates?.name ? coordinates?.name : selectedCity?.value;
         //vytawil unikalnye daty
         let tempDateArr = []
         weather.hourly.time.map(item => tempDateArr.push(item.substr(0, 10)));
@@ -68,7 +100,7 @@ function Weather() {
                 response: JSON.stringify(weather),
                 date: unique[i],
                 temperature: `Min: ${temp[i][0]}, Max: ${temp[i][1]}`,
-                city: selectedCity?.value
+                city: city
             })
         }
         //ob`edin9iu massivy
@@ -77,24 +109,28 @@ function Weather() {
 
     return (
         <>
-            <label style={{margin: "10px"}} htmlFor="name">Get weather:</label>
-            <Select
-                className='selectcity'
-                value={selectedCity}
-                defaultValue={selectedCity}
-                onChange={setSelectedCity}
-                options={kzCitiesList}
-            />
-            <Select
-                className='selectday'
-                value={selectedDay}
-                defaultValue={selectedDay}
-                onChange={setSelectedDay}
-                options={daysList}
-            />
-
-            <button className='btn' onClick={onRequest}>Request</button>
-            <MyContext.Provider value={{ log, setLog, selectedCity }}>
+            <div>
+                <label style={{margin: "10px"}} htmlFor="name">Select the city:</label>
+                <Select
+                    className='selectcity'
+                    value={selectedCity}
+                    defaultValue={selectedCity}
+                    onChange={setSelectedCity}
+                    options={kzCitiesList}
+                />
+                <label style={{margin: "10px"}} htmlFor="name"> or type the city(*priority): </label>
+                <TextField value={cityInput} onChange={e => setCityInput(e.target.value)} id="outlined-basic" label="City" variant="outlined" />
+                <label style={{margin: "5px 10px"}} htmlFor="name">Select day(s):</label>
+                <Select
+                    className='selectday'
+                    value={selectedDay}
+                    defaultValue={selectedDay}
+                    onChange={setSelectedDay}
+                    options={daysList}
+                />
+                <button className='btn' onClick={onRequest}>Request</button>
+            </div>
+            <MyContext.Provider value={{ log, setLog, selectedCity, cityInput }}>
                 <Table latitude={latitude} longitude={longitude} />
             </MyContext.Provider>
         </>

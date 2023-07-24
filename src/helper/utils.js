@@ -8,7 +8,7 @@ const utils = () => {
     };
     
     const formatDate = (date) => {
-        return `${date.getFullYear()}-${getZero(date.getMonth()+ 1)}-${getZero(date.getDate())}`
+        return `${date?.$y}-${getZero(date?.$M + 1)}-${getZero(date?.$D)}`;
     }
 
     return {getZero, formatDate}

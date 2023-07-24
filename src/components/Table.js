@@ -2,34 +2,40 @@ import { useState, useMemo, useContext } from 'react';
 import Service from '../services/Service';
 import utils from '../helper/utils';
 import ExportExcel from './ExportExcel';
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 import { MyContext } from "../context";
+
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 const Table = ({ latitude, longitude }) => {
 
-    const { log, setLog, selectedCity } = useContext(MyContext);
+    const { log, setLog, selectedCity, cityInput } = useContext(MyContext);
 
     const [date, setDate] = useState(null);
     const { getWeatherForGivenDay } = Service();
-    const { getZero, formatDate } = utils();
+    const { formatDate } = utils();
 
     const filteredData = useMemo(() =>
         date ? log.filter(item => item.date === formatDate(date)) : log, 
         // eslint-disable-next-line
-    [date]);
+    [log, date]);
 
     //Call sevice to selected day
     const onRequestGivenDay = () => {
-        if(!selectedCity) {
+        if(!selectedCity && !cityInput) {
             alert("please select city")
-        } else {            
-            getWeatherForGivenDay(latitude, longitude, `${date.getFullYear()}-${getZero(date.getMonth()+ 1)}-${getZero(date.getDate())}`)
+        } else { 
+            if (latitude && longitude){
+                getWeatherForGivenDay(latitude, longitude, formatDate(date))
                 .then(onWeatherGivenDayLoaded)
+            } else {alert("Incorrect city")}  
         }
     }
 
     const onWeatherGivenDayLoaded = async({weather, req}) => {
+        let city = cityInput ? cityInput : selectedCity?.value;
         //berem temperaturu max min za 1 den
         let tempTempArr = [...weather.hourly.temperature_2m];
         let maxTemp = Math.max(...tempTempArr);
@@ -41,15 +47,19 @@ const Table = ({ latitude, longitude }) => {
             response: JSON.stringify(weather),
             date: weather.hourly.time[0].substr(0, 10),
             temperature: `Min: ${minTemp}, Max: ${maxTemp}`,
-            city: selectedCity?.value
+            city: city
         }]);
     }
 
     return (
         <>
-            <div>
-                <label style={{margin: "10px"}} htmlFor="name">Filter by Date:</label> 
-                <DatePicker className='datepicker' isClearable showIcon dateFormat="yyyy-MM-dd" selected={date} onChange={(date) => setDate(date)} />
+            <div className='filterform'>
+                <label style={{margin: "10px"}} htmlFor="name">Filter by Date:</label>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DemoContainer components={['DatePicker']}>
+                        <DatePicker format="YYYY-MM-DD" value={date} onChange={(date) => setDate(date)} label="Date"  />
+                    </DemoContainer>
+                </LocalizationProvider>
                 <button 
                     name="sendReq" 
                     disabled = {!filteredData.length && date && selectedCity ? false : true}
